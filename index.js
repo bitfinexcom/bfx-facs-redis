@@ -5,10 +5,6 @@ const async = require('async')
 const Redis = require('ioredis')
 const Base = require('bfx-facs-base')
 
-Redis.Promise.onPossiblyUnhandledRejection(function (err) {
-  console.log('REDIS ERR', err)
-})
-
 function client (conf, label) {
   const rc = new Redis({
     port: conf.port,
