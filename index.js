@@ -6,14 +6,16 @@ const Redis = require('ioredis')
 const Base = require('bfx-facs-base')
 
 function client (conf, label) {
-  const rc = new Redis({
-    port: conf.port,
-    host: conf.host
-  })
+  const auth = conf.auth || conf.password
 
-  if (conf.auth) {
-    rc.auth(conf.auth)
+  delete conf.auth
+  delete conf.password
+
+  if (_.isString(auth) && auth !== '') {
+    conf.password = auth
   }
+
+  const rc = new Redis(conf)
 
   rc.on('error', err => {
     console.log(label || 'generic', err)
@@ -53,7 +55,7 @@ class RedisFacility extends Base {
       next => { super._start(next) },
       next => {
         _.each(this._names, pfx => {
-          this[pfx] = client(_.pick(this.conf, ['host', 'port', 'auth']))
+          this[pfx] = client(_.pick(this.conf, ['host', 'port', 'auth', 'sentinels', 'name']))
         })
 
         if (this.cli_sub) {
