@@ -15,6 +15,8 @@ function client (conf, label) {
     conf.password = auth
   }
 
+  conf.keepAlive = 5000 // set keepalive with some delay
+
   const rc = new Redis(conf)
 
   rc.on('error', err => {
