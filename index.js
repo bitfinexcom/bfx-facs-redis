@@ -48,7 +48,10 @@ class RedisFacility extends Base {
       msg = null
     }
 
-    if (!msg) return
+    if (!msg) {
+      return
+    }
+
     this.emit('message', channel, msg, src, pattern)
   }
 
