@@ -1,6 +1,6 @@
 {
   "name": "bfx-facs-redis",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": false,
   "description": "Bitfinex Redis Facility",
   "author": {
@@ -12,10 +12,10 @@
     "bitfinex"
   ],
   "dependencies": {
-    "async": "^2.6.1",
+    "async": "^3.2.0",
     "bfx-facs-base": "git+https://github.com/bitfinexcom/bfx-facs-base.git",
-    "ioredis": "^4.14.2",
-    "lodash": "^4.17.11"
+    "ioredis": "^4.16.3",
+    "lodash": "^4.17.15"
   },
   "engine": {
     "node": ">=8.0"
