@@ -41,6 +41,8 @@ class RedisFacility extends Base {
   onStream (channel, data, src, pattern) {
     let msg = null
 
+    channel = channel.toString()
+    
     if (this.caller.onRedisDataPrep0) {
       data = this.caller.onRedisDataPrep0(
         channel, data
