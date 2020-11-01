@@ -41,6 +41,12 @@ class RedisFacility extends Base {
   onStream (channel, data, src, pattern) {
     let msg = null
 
+    if (this.caller.onRedisDataPrep0) {
+      data = this.caller.onRedisDataPrep0(
+        channel, data
+      )
+    }
+    
     try {
       msg = JSON.parse(data)
     } catch (e) {
@@ -64,11 +70,13 @@ class RedisFacility extends Base {
         })
 
         if (this.cli_sub) {
-          this.cli_sub.on('message', (channel, data) => {
+          const subSfx = `message${this.opts.subBuffer ? 'Buffer' : ''}`
+
+          this.cli_sub.on(`message${subSfx}`, (channel, data) => {
             this.onStream(channel, data, this.opts.ns + '_sub')
           })
 
-          this.cli_sub.on('pmessage', (pattern, channel, data) => {
+          this.cli_sub.on(`pmessage${subSfx}`, (pattern, channel, data) => {
             this.onStream(channel, data, this.opts.ns + '_sub', pattern)
           })
         }
