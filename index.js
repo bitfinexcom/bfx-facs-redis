@@ -70,7 +70,7 @@ class RedisFacility extends Base {
         })
 
         if (this.cli_sub) {
-          const subSfx = `message${this.opts.subBuffer ? 'Buffer' : ''}`
+          const subSfx = this.opts.subBuffer ? 'Buffer' : ''
 
           this.cli_sub.on(`message${subSfx}`, (channel, data) => {
             this.onStream(channel, data, this.opts.ns + '_sub')
