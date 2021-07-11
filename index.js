@@ -20,7 +20,7 @@ function client (conf, label) {
   const rc = new Redis(conf)
 
   rc.on('error', err => {
-    console.error(label || 'generic', err)
+    console.error(new Date(), label || 'generic', err)
   })
 
   return rc
