@@ -22,6 +22,14 @@ function client (conf, label) {
   rc.on('error', err => {
     console.error(new Date(), label || 'generic', err)
   })
+  
+  rc._pinger = setInterval(() => {
+    if (rc.status !== 'ready') {
+      return 
+    }
+
+    rc.ping()
+  }, 15000)
 
   return rc
 }
@@ -93,6 +101,7 @@ class RedisFacility extends Base {
       next => { super._stop(next) },
       next => {
         _.each(this._names, pfx => {
+          clearInterval(this[pfx]._pinger)
           this[pfx].removeAllListeners('message')
           this[pfx].removeAllListeners('pmessage')
           this[pfx].disconnect()
