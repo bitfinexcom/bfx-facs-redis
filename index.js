@@ -111,6 +111,19 @@ class RedisFacility extends Base {
       }
     ], cb)
   }
+
+  _scriptPoll () {
+    return {
+      numberOfKeys: 1,
+      lua: "local len = redis.call('llen', KEYS[1]) \
+        if len == 0 then \
+         return nil \
+      end \
+      local result = redis.call('lrange', KEYS[1], 0, ARGV[1] - 1) \
+      redis.call('ltrim', KEYS[1], ARGV[1], -1) \
+      return result"
+    }
+  }
 }
 
 module.exports = RedisFacility
