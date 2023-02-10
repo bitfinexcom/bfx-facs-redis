@@ -14,7 +14,7 @@
   "dependencies": {
     "async": "^3.2.1",
     "bfx-facs-base": "git+https://github.com/bitfinexcom/bfx-facs-base.git",
-    "ioredis": "^5.2.2",
+    "ioredis": "^5.3.0",
     "lodash": "^4.17.21"
   },
   "engine": {
