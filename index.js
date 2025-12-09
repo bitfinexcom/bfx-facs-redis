@@ -3,7 +3,7 @@
 const _ = require('lodash')
 const async = require('async')
 const Redis = require('ioredis')
-const Base = require('bfx-facs-base')
+const Base = require('@bitfinex/bfx-facs-base')
 
 function client (conf, label) {
   const auth = conf.auth || conf.password
