@@ -22,10 +22,10 @@ function client (conf, label) {
   rc.on('error', err => {
     console.error(new Date(), label || 'generic', err)
   })
-  
+
   rc._pinger = setInterval(() => {
     if (rc.status !== 'ready') {
-      return 
+      return
     }
 
     rc.ping()
@@ -35,7 +35,6 @@ function client (conf, label) {
 }
 
 class RedisFacility extends Base {
-
   constructor (caller, opts, ctx) {
     super(caller, opts, ctx)
 
@@ -50,13 +49,13 @@ class RedisFacility extends Base {
     let msg = null
 
     channel = channel.toString()
-    
+
     if (this.caller.onRedisDataPrep0) {
       data = this.caller.onRedisDataPrep0(
         channel, data
       )
     }
-    
+
     try {
       msg = JSON.parse(data)
     } catch (e) {
@@ -123,6 +122,10 @@ class RedisFacility extends Base {
       redis.call('ltrim', KEYS[1], ARGV[1], -1) \
       return result"
     }
+  }
+
+  defineCommand (name, script, numberOfKeys) {
+    this.cli_rw.defineCommand(name, { lua: script, numberOfKeys })
   }
 }
 
