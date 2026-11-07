@@ -1,9 +1,10 @@
 'use strict'
 
-const _ = require('lodash')
 const async = require('async')
 const Redis = require('ioredis')
 const Base = require('@bitfinex/bfx-facs-base')
+
+const CLIENT_CONF_PROPERTIES = ['host', 'port', 'auth', 'sentinels', 'name']
 
 function client (conf, label) {
   const auth = conf.auth || conf.password
@@ -11,7 +12,7 @@ function client (conf, label) {
   delete conf.auth
   delete conf.password
 
-  if (_.isString(auth) && auth !== '') {
+  if (typeof auth === 'string' && auth !== '') {
     conf.password = auth
   }
 
@@ -74,8 +75,14 @@ class RedisFacility extends Base {
     async.series([
       next => { super._start(next) },
       next => {
-        _.each(this._names, pfx => {
-          this[pfx] = client(_.pick(this.conf, ['host', 'port', 'auth', 'sentinels', 'name']))
+        this._names.forEach(pfx => {
+          const clientConf = {}
+          for (const k of CLIENT_CONF_PROPERTIES) {
+            if (typeof this.conf === 'object' && Object.hasOwn(this.conf, k)) {
+              clientConf[k] = this.conf[k]
+            }
+          }
+          this[pfx] = client(clientConf)
         })
 
         if (this.cli_sub) {
@@ -99,7 +106,7 @@ class RedisFacility extends Base {
     async.series([
       next => { super._stop(next) },
       next => {
-        _.each(this._names, pfx => {
+        this._names.forEach(pfx => {
           clearInterval(this[pfx]._pinger)
           this[pfx].removeAllListeners('message')
           this[pfx].removeAllListeners('pmessage')
@@ -114,13 +121,13 @@ class RedisFacility extends Base {
   _scriptPoll () {
     return {
       numberOfKeys: 1,
-      lua: "local len = redis.call('llen', KEYS[1]) \
-        if len == 0 then \
-         return nil \
-      end \
-      local result = redis.call('lrange', KEYS[1], 0, ARGV[1] - 1) \
-      redis.call('ltrim', KEYS[1], ARGV[1], -1) \
-      return result"
+      lua: `local len = redis.call('llen', KEYS[1])
+        if len == 0 then
+         return nil
+      end
+      local result = redis.call('lrange', KEYS[1], 0, ARGV[1] - 1)
+      redis.call('ltrim', KEYS[1], ARGV[1], -1)
+      return result`
     }
   }
 
