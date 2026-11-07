@@ -12,7 +12,7 @@ function client (conf, label) {
   delete conf.auth
   delete conf.password
 
-  if ((typeof auth === 'string') && auth !== '') {
+  if (typeof auth === 'string' && auth !== '') {
     conf.password = auth
   }
 
