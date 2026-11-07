@@ -78,7 +78,7 @@ class RedisFacility extends Base {
         this._names.forEach(pfx => {
           const clientConf = {}
           for (const k of CLIENT_CONF_PROPERTIES) {
-            if ((typeof this.conf === 'object') && Object.hasOwn(this.conf, k)) {
+            if (typeof this.conf === 'object' && Object.hasOwn(this.conf, k)) {
               clientConf[k] = this.conf[k]
             }
           }
